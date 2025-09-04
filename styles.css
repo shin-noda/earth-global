@@ -21,6 +21,7 @@ h1 {
 .explanation-below {
   color: #fff;
   margin-top: 20px;
+  margin-bottom: -40px;
   font-size: 1.1rem;
 }
 
