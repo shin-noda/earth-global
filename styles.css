@@ -1,0 +1,19 @@
+/* Reset default margins/padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0b0c1a; /* dark background for contrast */
+  color: #ffffff;
+  text-align: center; /* centers everything horizontally */
+}
+
+/* Heading style */
+h1 {
+  font-size: 2rem;
+  margin-top: 10px;
+  color: #fff;
+}

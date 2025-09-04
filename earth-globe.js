@@ -30,17 +30,19 @@ class EarthGlobe extends HTMLElement {
         this.#addLightsAndMesh();
         this.#addEventListeners();
 
-        const hasWidth = this.style.width && this.style.width !== "";
-        const hasHeight = this.style.height && this.style.height !== "";
+        const widthAttr = this.getAttribute("width");
+        const heightAttr = this.getAttribute("height");
+        const posXAttr = this.getAttribute("position-x");
+        const posYAttr = this.getAttribute("position-y");
 
-        if (hasWidth && hasHeight) {
-            // User-specified size → fit inside container
-            const width = parseFloat(this.style.width);
-            const height = parseFloat(this.style.height);
-            this.#fitToContainer(width, height);
+        if (widthAttr && heightAttr) {
+            const width = parseFloat(widthAttr);
+            const height = parseFloat(heightAttr);
+            const posX = posXAttr ? parseFloat(posXAttr) : null;
+            const posY = posYAttr ? parseFloat(posYAttr) : null;
+            this.#fitToContainerWithPosition(width, height, posX, posY);
         } else {
-            // No custom size → fullscreen
-            this.#fitToScreen();
+            this.#fitToScreenResponsive();
         }
 
         this.#animate();
@@ -136,23 +138,14 @@ class EarthGlobe extends HTMLElement {
         window.addEventListener("resize", this.#handleResize);
     }
 
-    #fitToContainer(width, height) {
-        this.#mount.style.cssText = `
-            width: ${width}px;
-            height: ${height}px;
-            position: relative;
-            display: block;
-        `;
+    #fitToContainerWithPosition(width, height, posX = null, posY = null) {
+        let style = `width: ${width}px; height: ${height}px; position: absolute; display: block;`;
+        if (posX !== null) style += ` left: ${posX}px;`;
+        if (posY !== null) style += ` top: ${posY}px;`;
+        this.#mount.style.cssText = style;
 
         this.#renderer.setSize(width, height);
         this.#camera.aspect = width / height;
-
-        // Adjust camera distance proportional to container size
-        const fov = this.#camera.fov * (Math.PI / 180);
-        const globeRadius = 1;
-        const minDimension = Math.min(width, height);
-        const scaleFactor = minDimension / 400; // 400px reference
-
         this.#camera.position.z = 1.8;
         this.#camera.updateProjectionMatrix();
     }
@@ -169,45 +162,39 @@ class EarthGlobe extends HTMLElement {
     }
 
     #handleResize = () => {
-        const style = window.getComputedStyle(this);
-        let width = parseFloat(style.width);
-        let height = parseFloat(style.height);
-
-        if (width === 0 || height === 0) {
-            width = window.innerWidth;
-            height = window.innerHeight;
+        const widthAttr = this.getAttribute("width");
+        const heightAttr = this.getAttribute("height");
+        if (widthAttr && heightAttr) {
+            const width = parseFloat(widthAttr);
+            const height = parseFloat(heightAttr);
+            const posX = this.getAttribute("position-x") ? parseFloat(this.getAttribute("position-x")) : null;
+            const posY = this.getAttribute("position-y") ? parseFloat(this.getAttribute("position-y")) : null;
+            this.#fitToContainerWithPosition(width, height, posX, posY);
+        } else {
+            this.#fitToScreenResponsive();
         }
-
-        this.#renderer.setSize(width, height);
-        this.#camera.aspect = width / height;
-
-        const fov = this.#camera.fov * (Math.PI / 180);
-        const globeRadius = 1;
-        const minDimension = Math.min(width, height);
-        const scaleFactor = minDimension / 400;
-
-        this.#camera.position.z = 1.8;
-        this.#camera.updateProjectionMatrix();
     };
 
-    #fitToScreen() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        this.#mount.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: ${width}px;
-            height: ${height}px;
-            z-index: 999;
-        `;
-        this.#renderer.setSize(width, height);
-        this.#camera.aspect = width / height;
+    #fitToScreenResponsive() {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const size = Math.min(screenWidth, screenHeight);
+        const leftOffset = (screenWidth - size) / 2;
 
+        this.#mount.style.cssText = `
+            position: relative;
+            width: ${size}px;
+            height: ${size}px;
+            margin-left: ${leftOffset}px;
+            display: block;
+        `;
+
+        this.#renderer.setSize(size, size);
+        this.#camera.aspect = 1;
         const fov = this.#camera.fov * (Math.PI / 180);
         const globeRadius = 1;
-        const fitDistance = globeRadius / Math.tan(fov / 2);
-        this.#camera.position.z = fitDistance * 1.4;
+        const distance = globeRadius / Math.tan(fov / 2);
+        this.#camera.position.z = distance * 1.4;
         this.#camera.updateProjectionMatrix();
     }
 
@@ -220,9 +207,7 @@ class EarthGlobe extends HTMLElement {
     };
 
     spinEarth(speed = 0.002) {
-        if (this.#autoSpin) {
-            this.#spinSpeed = speed;
-        }
+        if (this.#autoSpin) this.#spinSpeed = speed;
     }
 }
 
