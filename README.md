@@ -6,7 +6,7 @@ An interactive 3D Earth that you can embed anywhere using a simple `<earth-globe
 Check it out here: [https://shin-noda.github.io/earth-globe/](https://shin-noda.github.io/earth-globe/)
 
 ## Features
-- Fully interactive 3D globe.
+- Interactive 3D globe.
 - Drag to rotate, scroll to zoom.
 - Responsive by default, or use custom size and position.
 - Lightweight and easy to embed.
