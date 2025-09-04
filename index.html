@@ -1,23 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3D Earth</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="./earth-globe.js" defer></script>
   </head>
 
   <body>
-
-    <earth-globe></earth-globe>
+    <h1>Project &lt;earth-globe /&gt;</h1>
+    
+    <earth-globe />
 
     <!--
       Example: default
-      <earth-globe></earth-globe>
+      <earth-globe />
+
+      Example: custom size
+      <earth-globe 
+        width"200px"
+        height="200px" 
+      />
+
+      Example: custom positions
+      <earth-globe
+        position-x="100"
+        position-y="200"
+      />
+
+      Example: custom size and position
+        <earth-globe
+        width="400px"
+        height="400px"
+        position-x="100"
+        position-y="100"
+      />
     -->
 
-    <!--
-      Example: custom width and height
-      <earth-globe style="width:100px; height: 100px;"></earth-globe>
-    -->
   </body>
 </html>
