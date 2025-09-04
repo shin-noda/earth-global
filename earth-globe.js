@@ -29,7 +29,20 @@ class EarthGlobe extends HTMLElement {
         this.#initializeScene();
         this.#addLightsAndMesh();
         this.#addEventListeners();
-        this.#fitToScreen();
+
+        const hasWidth = this.style.width && this.style.width !== "";
+        const hasHeight = this.style.height && this.style.height !== "";
+
+        if (hasWidth && hasHeight) {
+            // User-specified size → fit inside container
+            const width = parseFloat(this.style.width);
+            const height = parseFloat(this.style.height);
+            this.#fitToContainer(width, height);
+        } else {
+            // No custom size → fullscreen
+            this.#fitToScreen();
+        }
+
         this.#animate();
     }
 
@@ -55,16 +68,13 @@ class EarthGlobe extends HTMLElement {
     }
 
     #addLightsAndMesh() {
-        // Ambient light
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
         this.#scene.add(ambientLight);
 
-        // Directional light for subtle shading
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
         directionalLight.position.set(5, 3, 5);
         this.#scene.add(directionalLight);
 
-        // Earth mesh
         const geometry = new THREE.SphereGeometry(1, 64, 64);
         const texture = new THREE.TextureLoader().load(
             "https://raw.githubusercontent.com/shin-noda/earth-model/main/public/textures/earth.jpg"
@@ -126,6 +136,27 @@ class EarthGlobe extends HTMLElement {
         window.addEventListener("resize", this.#handleResize);
     }
 
+    #fitToContainer(width, height) {
+        this.#mount.style.cssText = `
+            width: ${width}px;
+            height: ${height}px;
+            position: relative;
+            display: block;
+        `;
+
+        this.#renderer.setSize(width, height);
+        this.#camera.aspect = width / height;
+
+        // Adjust camera distance proportional to container size
+        const fov = this.#camera.fov * (Math.PI / 180);
+        const globeRadius = 1;
+        const minDimension = Math.min(width, height);
+        const scaleFactor = minDimension / 400; // 400px reference
+
+        this.#camera.position.z = 1.8;
+        this.#camera.updateProjectionMatrix();
+    }
+
     #removeEventListeners() {
         const canvas = this.#renderer?.domElement;
         if (!canvas) return;
@@ -138,10 +169,24 @@ class EarthGlobe extends HTMLElement {
     }
 
     #handleResize = () => {
-        const width = this.offsetWidth || window.innerWidth;
-        const height = this.offsetHeight || window.innerHeight;
+        const style = window.getComputedStyle(this);
+        let width = parseFloat(style.width);
+        let height = parseFloat(style.height);
+
+        if (width === 0 || height === 0) {
+            width = window.innerWidth;
+            height = window.innerHeight;
+        }
+
         this.#renderer.setSize(width, height);
         this.#camera.aspect = width / height;
+
+        const fov = this.#camera.fov * (Math.PI / 180);
+        const globeRadius = 1;
+        const minDimension = Math.min(width, height);
+        const scaleFactor = minDimension / 400;
+
+        this.#camera.position.z = 1.8;
         this.#camera.updateProjectionMatrix();
     };
 
@@ -158,6 +203,7 @@ class EarthGlobe extends HTMLElement {
         `;
         this.#renderer.setSize(width, height);
         this.#camera.aspect = width / height;
+
         const fov = this.#camera.fov * (Math.PI / 180);
         const globeRadius = 1;
         const fitDistance = globeRadius / Math.tan(fov / 2);
