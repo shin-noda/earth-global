@@ -79,7 +79,7 @@ class EarthGlobe extends HTMLElement {
 
         const geometry = new THREE.SphereGeometry(1, 64, 64);
         const texture = new THREE.TextureLoader().load(
-            "https://raw.githubusercontent.com/shin-noda/earth-globe/images/earth.jpg"
+            "https://raw.githubusercontent.com/shin-noda/earth-globe/main/images/earth.jpg"
         );
         const material = new THREE.MeshStandardMaterial({
             map: texture,
