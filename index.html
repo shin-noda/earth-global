@@ -3,40 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Earth</title>
+
+    <title>Project &lt;earth-globe&gt;</title>
+
     <link rel="stylesheet" href="styles.css" />
-    <script src="./earth-globe.js" defer></script>
+    <!-- Import the custom element -->
+    <script src="https://shin-noda.github.io/earth-global/earth-globe.js" defer></script>
   </head>
 
   <body>
-    <h1>Project &lt;earth-globe /&gt;</h1>
+    <h1>Project &lt;earth-globe&gt;</h1>
+
+    <p class="explanation-below">Check out how to use &lt;earth-globe&gt; below!</p>
     
-    <earth-globe />
+    <!-- Default example -->
+    <earth-globe></earth-globe>
+    
+    <div class="how-to-use">
+      <h2 class="">How to use &lt;earth-globe&gt;?</h2>
+      <p>
+        The <code>&lt;earth-globe&gt;</code> tag is a custom web component that displays
+        an interactive 3D Earth. To use it, you must first include the following
+        script inside your HTML <code>&lt;head&gt;</code>:
+      </p>
 
-    <!--
-      Example: default
-      <earth-globe />
+      <code>&lt;script src="https://shin-noda.github.io/earth-global/earth-globe.js" defer&gt;&lt;/script&gt;</code>
 
-      Example: custom size
-      <earth-globe 
-        width"200px"
-        height="200px" 
-      />
+      <h3>Minimal Example</h3>
+      <p>
+        Here’s the smallest HTML file you need to display a working globe:
+      </p>
 
-      Example: custom positions
-      <earth-globe
-        position-x="100"
-        position-y="200"
-      />
+      <code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &nbsp;&nbsp;&lt;head&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset="UTF-8" /&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Example earth-globe tag&lt;/title&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;script src="https://shin-noda.github.io/earth-global/earth-globe.js" defer&gt;&lt;/script&gt;
+&nbsp;&nbsp;&lt;/head&gt;
+&nbsp;&nbsp;&lt;body&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Example earth-globe tag&lt;/h1&gt;
+  &nbsp;&nbsp;&nbsp;&nbsp;&lt;earth-globe&gt;&lt;/earth-globe&gt;
+&nbsp;&nbsp;&lt;/body&gt;
+&lt;/html&gt;
+      </code>
 
-      Example: custom size and position
-        <earth-globe
-        width="400px"
-        height="400px"
-        position-x="100"
-        position-y="100"
-      />
-    -->
+      <h3>More Examples</h3>
+      <ul>
+        <li>
+          <strong>Default (responsive fullscreen)</strong><br />
+          <code>&lt;earth-globe&gt;&lt;/earth-globe&gt;</code>
+        </li>
+
+        <li>
+          <strong>Custom size</strong><br />
+          <code>&lt;earth-globe width="200px" height="200px"&gt;&lt;/earth-globe&gt;</code>
+        </li>
+
+        <li>
+          <strong>Custom position</strong><br />
+          <code>&lt;earth-globe position-x="100" position-y="200"&gt;&lt;/earth-globe&gt;</code>
+        </li>
+
+        <li>
+          <strong>Custom size + position</strong><br />
+          <code>
+&lt;earth-globe 
+  width="400px" 
+  height="400px" 
+  position-x="100" 
+  position-y="100"&gt;&lt;/earth-globe&gt;
+          </code>
+        </li>
+      </ul>
+    </div>
 
   </body>
 </html>
